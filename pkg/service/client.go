@@ -34,9 +34,10 @@ const (
 )
 
 const (
-	Owner     = "owner"
-	Source    = "source"
-	UserToken = "user_token"
+	Owner         = "owner"
+	Source        = "source"
+	UserToken     = "user_token"
+	SubscribePath = "sysField._subscribeAddr"
 )
 
 type User struct {

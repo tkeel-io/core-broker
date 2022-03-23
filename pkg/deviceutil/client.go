@@ -33,11 +33,12 @@ func NewClient(token string) *Client {
 	}
 }
 
-func (c Client) Search(url Service, conditions Conditions) ([]byte, error) {
+func (c Client) Search(url Service, conditions Conditions, query string) ([]byte, error) {
 	searchRequest := SearchRequest{
 		PageNum:    1,
 		PageSize:   5000,
 		Conditions: conditions,
+		Query:      query,
 	}
 	content, err := json.Marshal(&searchRequest)
 	log.Info("Device Search Request URL:", url)
@@ -139,5 +140,21 @@ func DeviceQuery(id string) ConditionQuery {
 		Field:    "id",
 		Operator: "$eq",
 		Value:    id,
+	}
+}
+
+func EqQuery(field, value string) ConditionQuery {
+	return ConditionQuery{
+		Field:    field,
+		Operator: "$eq",
+		Value:    value,
+	}
+}
+
+func WildcardQuery(field, value string) ConditionQuery {
+	return ConditionQuery{
+		Field:    field,
+		Operator: "$wildcard",
+		Value:    value,
 	}
 }

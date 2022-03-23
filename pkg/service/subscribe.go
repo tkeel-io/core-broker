@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
+	"strings"
+
 	"github.com/go-sql-driver/mysql"
 	"github.com/tkeel-io/core-broker/pkg/auth"
-	"strings"
 
 	"github.com/pkg/errors"
 	pb "github.com/tkeel-io/core-broker/api/subscribe/v1"
@@ -232,27 +233,10 @@ func (s *SubscribeService) ListSubscribeEntities(ctx context.Context, req *pb.Li
 		return nil, pb.ErrInvalidArgument()
 	}
 
-	var records []model.SubscribeEntities
-	result := model.Paginate(&records, page, model.SubscribeEntities{SubscribeID: subscribe.ID})
-	if result.Error != nil {
-		log.Error("err:", result.Error)
-		return nil, pb.ErrList()
-	}
-
-	resp := &pb.ListSubscribeEntitiesResponse{}
-	page.SetTotal(uint(len(records)))
-	err = page.FillResponse(resp)
-	if err != nil {
-		log.Error("err:", err)
-		return nil, pb.ErrList()
-	}
-
-	entitiesIDs := make([]string, 0, len(records))
-	for i := range records {
-		entitiesIDs = append(entitiesIDs, records[i].EntityID)
-	}
-
-	data, err := s.deviceEntities(entitiesIDs, authUser.Token)
+	conditions := make(deviceutil.Conditions, 0)
+	conditions = append(conditions, deviceutil.EqQuery(Owner, authUser.ID))
+	conditions = append(conditions, deviceutil.WildcardQuery(SubscribePath, subscribe.Endpoint))
+	data, err := s.getEntitiesByConditions(conditions, authUser.Token, page.KeyWords)
 	if err != nil {
 		log.Error("err:", err)
 		if errors.Is(err, ErrDeviceNotFound) {
@@ -261,6 +245,7 @@ func (s *SubscribeService) ListSubscribeEntities(ctx context.Context, req *pb.Li
 		return nil, pb.ErrInternalQuery()
 	}
 
+	resp := &pb.ListSubscribeEntitiesResponse{}
 	resp.Data = data
 
 	return resp, nil
@@ -632,7 +617,7 @@ func (s *SubscribeService) getDeviceEntitiesIDsFromGroups(ctx context.Context, g
 	var data []string
 	dc := deviceutil.NewClient(token)
 	for i := range groups {
-		bytes, err := dc.Search(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.GroupQuery(groups[i]), deviceutil.DeviceTypeQuery()})
+		bytes, err := dc.Search(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.GroupQuery(groups[i]), deviceutil.DeviceTypeQuery()}, "")
 		if err != nil {
 			log.Error("query device by device group err:", err)
 			return nil, err
@@ -655,7 +640,7 @@ func (s *SubscribeService) getDeviceEntitiesIDsFromTemplates(ctx context.Context
 	var data []string
 	dc := deviceutil.NewClient(token)
 	for i := range templates {
-		bytes, err := dc.Search(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.TemplateQuery(templates[i])})
+		bytes, err := dc.Search(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.TemplateQuery(templates[i])}, "")
 		if err != nil {
 			log.Error("query device by device group err:", err)
 			return nil, err
@@ -677,7 +662,7 @@ func (s SubscribeService) deviceEntities(ids []string, token string) ([]*pb.Enti
 	entities := make([]*pb.Entity, 0, len(ids))
 	client := deviceutil.NewClient(token)
 	for _, id := range ids {
-		bytes, err := client.Search(deviceutil.EntitySearch, deviceutil.Conditions{deviceutil.DeviceQuery(id)})
+		bytes, err := client.Search(deviceutil.EntitySearch, deviceutil.Conditions{deviceutil.DeviceQuery(id)}, "")
 		if err != nil {
 			log.Error("query device by device id err:", err)
 			return nil, err
@@ -700,6 +685,42 @@ func (s SubscribeService) deviceEntities(ids []string, token string) ([]*pb.Enti
 			UpdatedAt: resp.Data.Items[0].Properties.SysField.UpdatedAt,
 		}
 		if resp.Data.Items[0].Properties.ConnectionInfo.IsOnline {
+			entity.Status = "online"
+		}
+		entities = append(entities, entity)
+	}
+	return entities, nil
+}
+
+func (s SubscribeService) getEntitiesByConditions(conditions deviceutil.Conditions, token, query string) ([]*pb.Entity, error) {
+	client := deviceutil.NewClient(token)
+	entities := make([]*pb.Entity, 0)
+
+	bytes, err := client.Search(deviceutil.EntitySearch, conditions, query)
+	if err != nil {
+		log.Error("query device by device id err:", err)
+		return nil, err
+	}
+	resp, err := deviceutil.ParseSearchEntityResponse(bytes)
+	if err != nil {
+		log.Error("parse device search response err:", err)
+		return nil, err
+	}
+	if len(resp.Data.Items) == 0 {
+		log.Error("device not found:", conditions)
+		return nil, ErrDeviceNotFound
+	}
+
+	for _, item := range resp.Data.Items {
+		entity := &pb.Entity{
+			ID:        item.Id,
+			Name:      item.Properties.BasicInfo.Name,
+			Template:  item.Properties.BasicInfo.TemplateName,
+			Group:     item.Properties.BasicInfo.ParentName,
+			Status:    "offline",
+			UpdatedAt: item.Properties.SysField.UpdatedAt,
+		}
+		if item.Properties.ConnectionInfo.IsOnline {
 			entity.Status = "online"
 		}
 		entities = append(entities, entity)

@@ -2,7 +2,7 @@ GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
 API_PROTO_FILES=$(shell find api -name *.proto)
-DOCKERTAG?=tkeelio/core-broker:v0.3.0
+DOCKERTAG?=tkeelio/core-broker:0.4.1-alpha.3
 
 LOCAL_OS := $(shell uname)
 ifeq ($(LOCAL_OS),Linux)
@@ -63,6 +63,9 @@ generate:
 docker-build:
 	docker build -t $(DOCKERTAG) .
 docker-push:
+	docker push $(DOCKERTAG)
+docker-auto:
+	docker build -t $(DOCKERTAG) .
 	docker push $(DOCKERTAG)
 
 .PHONY: all
