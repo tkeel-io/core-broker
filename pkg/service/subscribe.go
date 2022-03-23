@@ -236,7 +236,7 @@ func (s *SubscribeService) ListSubscribeEntities(ctx context.Context, req *pb.Li
 	conditions := make(deviceutil.Conditions, 0)
 	conditions = append(conditions, deviceutil.EqQuery(Owner, authUser.ID))
 	conditions = append(conditions, deviceutil.WildcardQuery(SubscribePath, subscribe.Endpoint))
-	data, err := s.getEntitiesByConditions(conditions, authUser.Token, page.KeyWords)
+	data, err := s.getEntitiesByConditions(conditions, authUser.Token, page.KeyWords, int32(page.Num), int32(page.Size))
 	if err != nil {
 		log.Error("err:", err)
 		if errors.Is(err, ErrDeviceNotFound) {
@@ -246,6 +246,12 @@ func (s *SubscribeService) ListSubscribeEntities(ctx context.Context, req *pb.Li
 	}
 
 	resp := &pb.ListSubscribeEntitiesResponse{}
+	page.SetTotal(uint(len(data)))
+	err = page.FillResponse(resp)
+	if err != nil {
+		log.Error("err:", err)
+		return nil, pb.ErrList()
+	}
 	resp.Data = data
 
 	return resp, nil
@@ -617,7 +623,7 @@ func (s *SubscribeService) getDeviceEntitiesIDsFromGroups(ctx context.Context, g
 	var data []string
 	dc := deviceutil.NewClient(token)
 	for i := range groups {
-		bytes, err := dc.Search(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.GroupQuery(groups[i]), deviceutil.DeviceTypeQuery()}, "")
+		bytes, err := dc.SearchDefault(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.GroupQuery(groups[i]), deviceutil.DeviceTypeQuery()})
 		if err != nil {
 			log.Error("query device by device group err:", err)
 			return nil, err
@@ -640,7 +646,7 @@ func (s *SubscribeService) getDeviceEntitiesIDsFromTemplates(ctx context.Context
 	var data []string
 	dc := deviceutil.NewClient(token)
 	for i := range templates {
-		bytes, err := dc.Search(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.TemplateQuery(templates[i])}, "")
+		bytes, err := dc.SearchDefault(deviceutil.DeviceSearch, deviceutil.Conditions{deviceutil.TemplateQuery(templates[i])})
 		if err != nil {
 			log.Error("query device by device group err:", err)
 			return nil, err
@@ -662,7 +668,7 @@ func (s SubscribeService) deviceEntities(ids []string, token string) ([]*pb.Enti
 	entities := make([]*pb.Entity, 0, len(ids))
 	client := deviceutil.NewClient(token)
 	for _, id := range ids {
-		bytes, err := client.Search(deviceutil.EntitySearch, deviceutil.Conditions{deviceutil.DeviceQuery(id)}, "")
+		bytes, err := client.SearchDefault(deviceutil.EntitySearch, deviceutil.Conditions{deviceutil.DeviceQuery(id)})
 		if err != nil {
 			log.Error("query device by device id err:", err)
 			return nil, err
@@ -692,11 +698,11 @@ func (s SubscribeService) deviceEntities(ids []string, token string) ([]*pb.Enti
 	return entities, nil
 }
 
-func (s SubscribeService) getEntitiesByConditions(conditions deviceutil.Conditions, token, query string) ([]*pb.Entity, error) {
+func (s SubscribeService) getEntitiesByConditions(conditions deviceutil.Conditions, token, query string, num, size int32) ([]*pb.Entity, error) {
 	client := deviceutil.NewClient(token)
 	entities := make([]*pb.Entity, 0)
 
-	bytes, err := client.Search(deviceutil.EntitySearch, conditions, query)
+	bytes, err := client.Search(deviceutil.EntitySearch, conditions, query, num, size)
 	if err != nil {
 		log.Error("query device by device id err:", err)
 		return nil, err
