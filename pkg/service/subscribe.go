@@ -65,20 +65,31 @@ func (s *SubscribeService) SubscribeEntitiesByIDs(ctx context.Context, req *pb.S
 	}
 
 	records := s.createSubscribeEntitiesRecords(req.Entities, &subscribe)
-	result := model.DB().Preload("Subscribe").Create(&records)
-	if result.Error != nil {
-		log.Error("err:", result.Error)
-		mysqlErr, ok := result.Error.(*mysql.MySQLError)
-		if ok && mysqlErr.Number == 1062 {
-			return nil, pb.ErrDuplicateCreate()
-		}
-		return nil, pb.ErrInternalError()
+	err = CreateSubscribeEntities(records)
+	if err != nil {
+		return nil, err
 	}
-	if result.RowsAffected != int64(len(records)) {
-		return nil, pb.ErrSomeDuplicateCreate()
-	}
-
 	return resp, nil
+}
+
+func CreateSubscribeEntities(records []*model.SubscribeEntities) (err error) {
+	var affected int64
+	for _, record := range records {
+		result := model.DB().Preload("Subscribe").Create(record)
+		if result.Error != nil {
+			log.Error("err:", result.Error)
+			mysqlErr, ok := result.Error.(*mysql.MySQLError)
+			if ok && mysqlErr.Number == 1062 {
+				continue
+			}
+			return pb.ErrInternalError()
+		}
+		affected += 1
+	}
+	if affected != int64(len(records)) {
+		log.Warn(pb.ErrSomeDuplicateCreate())
+	}
+	return nil
 }
 
 func (s *SubscribeService) SubscribeEntitiesByGroups(ctx context.Context, req *pb.SubscribeEntitiesByGroupsRequest) (*pb.SubscribeEntitiesByGroupsResponse, error) {
@@ -112,17 +123,10 @@ func (s *SubscribeService) SubscribeEntitiesByGroups(ctx context.Context, req *p
 	}
 	records := s.createSubscribeEntitiesRecords(ids, &subscribe)
 	log.Info("create subscribe entities records:", records)
-	result := model.DB().Create(&records)
-	if result.Error != nil {
-		log.Error("err:", result.Error)
-		mysqlErr, ok := result.Error.(*mysql.MySQLError)
-		if ok && mysqlErr.Number == 1062 {
-			return nil, pb.ErrDuplicateCreate()
-		}
-		return nil, pb.ErrInternalError()
-	}
-	if result.RowsAffected != int64(len(records)) {
-		return nil, pb.ErrSomeDuplicateCreate()
+
+	err = CreateSubscribeEntities(records)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }
@@ -157,17 +161,10 @@ func (s *SubscribeService) SubscribeEntitiesByModels(ctx context.Context, req *p
 		return nil, pb.ErrDeviceNotFound()
 	}
 	records := s.createSubscribeEntitiesRecords(ids, &subscribe)
-	result := model.DB().Create(&records)
-	if result.Error != nil {
-		log.Error("err:", result.Error)
-		mysqlErr, ok := result.Error.(*mysql.MySQLError)
-		if ok && mysqlErr.Number == 1062 {
-			return nil, pb.ErrDuplicateCreate()
-		}
-		return nil, pb.ErrInternalError()
-	}
-	if result.RowsAffected != int64(len(records)) {
-		return nil, pb.ErrSomeDuplicateCreate()
+
+	err = CreateSubscribeEntities(records)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }
@@ -624,15 +621,15 @@ func (s *SubscribeService) SubscribeByDevice(ctx context.Context, req *pb.Subscr
 }
 
 // createSubscribeEntitiesRecords create SubscribeEntities(subscribe_entities table) records.
-func (s *SubscribeService) createSubscribeEntitiesRecords(entityIDs []string, subscribe *model.Subscribe) []model.SubscribeEntities {
-	records := make([]model.SubscribeEntities, 0, len(entityIDs))
+func (s *SubscribeService) createSubscribeEntitiesRecords(entityIDs []string, subscribe *model.Subscribe) []*model.SubscribeEntities {
+	records := make([]*model.SubscribeEntities, 0, len(entityIDs))
 	for _, entityID := range entityIDs {
 		subscribeEntity := model.SubscribeEntities{
 			Subscribe: *subscribe,
 			EntityID:  entityID,
 			UniqueKey: subscribeuril.GenerateSubscribeTopic(subscribe.ID, entityID),
 		}
-		records = append(records, subscribeEntity)
+		records = append(records, &subscribeEntity)
 	}
 	return records
 }
@@ -721,7 +718,7 @@ func (s SubscribeService) getEntitiesByConditions(conditions deviceutil.Conditio
 	entities := make([]*pb.Entity, 0)
 
 	bytes, err := client.Search(deviceutil.EntitySearch, conditions,
-		deviceutil.WithQuery(page.SearchKey), deviceutil.WithPagination(int32(page.Num), int32(page.Size)))
+		deviceutil.WithQuery(page.KeyWords), deviceutil.WithPagination(int32(page.Num), int32(page.Size)))
 	if err != nil {
 		log.Error("query device by device id err:", err)
 		return nil, err
@@ -731,10 +728,10 @@ func (s SubscribeService) getEntitiesByConditions(conditions deviceutil.Conditio
 		log.Error("parse device search response err:", err)
 		return nil, err
 	}
-	if len(resp.Data.Items) == 0 {
-		log.Error("device not found:", conditions)
-		return nil, ErrDeviceNotFound
-	}
+	//	if len(resp.Data.Items) == 0 {
+	//		log.Error("device not found:", conditions)
+	//		return nil, ErrDeviceNotFound
+	//	}
 	page.SetTotal(uint(resp.Data.Total))
 
 	for _, item := range resp.Data.Items {
