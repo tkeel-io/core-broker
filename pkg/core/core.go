@@ -74,7 +74,7 @@ func (c *Client) Subscribe(subscriptionID, entityID, topic string) error {
 
 func (c *Client) Unsubscribe(subscriptionID string) error {
 	ctx := context.Background()
-	methodName := CreateSubscriptionURL(subscriptionID, "admin", "dm", "SUBSCRIPTION")
+	methodName := CreateUnsubscriptionURL(subscriptionID, "admin", "dm", "SUBSCRIPTION")
 	log.Debug("invoke unsubscribe to Core: ", methodName)
 	if c, err := c.daprClient.InvokeMethod(ctx, AppID, methodName, http.MethodDelete); err != nil {
 		log.Error("invoke ", methodName, " with ", http.MethodDelete, err)
