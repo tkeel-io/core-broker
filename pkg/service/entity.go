@@ -19,6 +19,7 @@ package service
 import (
 	"encoding/json"
 	"net/http"
+	"sync"
 
 	go_restful "github.com/emicklei/go-restful"
 	"github.com/google/uuid"
@@ -31,6 +32,7 @@ import (
 type EntityService struct {
 	msgChanMap map[string]map[string]chan []byte // entityID  clientID msgChan
 	coreClient core.Client
+	locker     sync.RWMutex
 }
 
 func NewEntityService() *EntityService {
@@ -57,12 +59,13 @@ func (s *EntityService) Run() {
 			entityID = types.GetEntityID(subID)
 			msgData, _ = json.Marshal(kv["properties"])
 		}
-
+		s.locker.RLock()
 		if clientMsgChan, ok := s.msgChanMap[entityID]; ok {
 			for _, msgChan := range clientMsgChan {
 				msgChan <- msgData
 			}
 		}
+		s.locker.RUnlock()
 	}
 }
 
@@ -76,6 +79,8 @@ func (s *EntityService) handleRequest(c *websocket.Conn, stopChan chan struct{},
 	for {
 		_, p, err := c.ReadMessage()
 		if err != nil {
+			s.locker.Lock()
+			defer s.locker.Unlock()
 			if _, ok := s.msgChanMap[entityID]; ok {
 				delete(s.msgChanMap[entityID], clientID)
 				if len(s.msgChanMap[entityID]) == 0 {
@@ -101,18 +106,24 @@ func (s *EntityService) handleRequest(c *websocket.Conn, stopChan chan struct{},
 		if entityID == "" && entityIDTemp != "" {
 			entityID = entityIDTemp
 		} else if entityID != entityIDTemp {
+			s.locker.Lock()
 			delete(s.msgChanMap[entityID], clientID)
+			s.locker.Unlock()
 			entityID = entityIDTemp
 		}
 		if _, ok := s.msgChanMap[entityID]; !ok {
+			s.locker.Lock()
 			s.msgChanMap[entityID] = make(map[string]chan []byte)
+			s.locker.Unlock()
 
 			subID := types.SubscriptionIDByJoin(entityID, types.Topic)
 			if err := s.coreClient.Subscribe(subID, entityID, types.Topic); err != nil {
 				log.Error("call subscribing to core err:", err)
 			}
 		}
+		s.locker.Lock()
 		s.msgChanMap[entityID][clientID] = msgChan
+		s.locker.Unlock()
 	}
 }
 
