@@ -23,7 +23,7 @@ const (
 	ErrPartialFailure = "PARTIAL FAILURE"
 
 	_DefaultSubscribeTitle       = "我的订阅"
-	_DefaultSubscribeDescription = "这是我的默认订阅，该订阅无法被删除，无法被修改。"
+	_DefaultSubscribeDescription = "平台默认订阅，该订阅无法被删除，无法被修改。"
 )
 
 var (
