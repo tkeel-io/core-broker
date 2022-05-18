@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "daprd-debug-go",
+            "type": "daprd",
+            "appId": "core-broker",
+            "appPort": 31234
+        }
+    ]
+}
