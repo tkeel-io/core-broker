@@ -33,14 +33,18 @@ type SubscriptionData struct {
 	PubsubName string `json:"pubsub_name,omitempty"`
 }
 
-func (c *Client) Subscribe(subscriptionID, entityID, topic string) error {
+func (c *Client) Subscribe(subscriptionID, entityID, topic string, fields ...string) error {
 	if subscriptionID == "" ||
 		entityID == "" ||
 		topic == "" {
 		return errors.New("subscriptionID, entityID or topic is empty")
 	}
 	ctx := context.Background()
-	filter := IntoFilterQuery(subscriptionID, entityID)
+	field := "*"
+	if len(fields) == 1 {
+		field = fields[0]
+	}
+	filter := IntoFilterQuery(subscriptionID, entityID, field)
 	subscriptionRequestData := SubscriptionData{
 		Mode:       "realtime",
 		Source:     "ignore",
@@ -84,8 +88,8 @@ func (c *Client) Unsubscribe(subscriptionID string) error {
 	return nil
 }
 
-const _InsertQueryTemplate = "insert into %s select %s.*"
+const _InsertQueryTemplate = "insert into %s select %s.%s"
 
-func IntoFilterQuery(to string, from string) string {
-	return fmt.Sprintf(_InsertQueryTemplate, to, from)
+func IntoFilterQuery(to, from, filed string) string {
+	return fmt.Sprintf(_InsertQueryTemplate, to, from, filed)
 }
