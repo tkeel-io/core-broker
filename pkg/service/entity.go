@@ -23,8 +23,9 @@ import (
 
 	go_restful "github.com/emicklei/go-restful"
 	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
 	"github.com/tkeel-io/core-broker/pkg/core"
+
+	"github.com/gorilla/websocket"
 	"github.com/tkeel-io/core-broker/pkg/types"
 	"github.com/tkeel-io/kit/log"
 )
@@ -135,8 +136,8 @@ func (s *EntityService) GetEntity(req *go_restful.Request, resp *go_restful.Resp
 
 	defer c.Close()
 
-	var stopChan = make(chan struct{})
-	var msgChan = make(chan []byte)
+	stopChan := make(chan struct{})
+	msgChan := make(chan []byte)
 
 	defer close(msgChan)
 
@@ -149,6 +150,7 @@ func (s *EntityService) GetEntity(req *go_restful.Request, resp *go_restful.Resp
 			if err != nil {
 				return
 			}
+
 		case <-stopChan:
 			log.Info("ws stop")
 			return
