@@ -15,15 +15,14 @@ const (
 	_AuthorizationHeader  = "Authorization"
 )
 
-var (
-	ErrNotFound = errors.New("authorization info not found")
-)
+var ErrNotFound = errors.New("authorization info not found")
 
 type User struct {
-	ID    string `json:"id"`
-	Role  string `json:"role"`
-	Token string `json:"token"`
-	Auth  string `json:"auth"`
+	ID       string `json:"id"`
+	Role     string `json:"role"`
+	Token    string `json:"token"`
+	Auth     string `json:"auth"`
+	TenantID string `json:"tenant_id"`
 }
 
 func GetUser(ctx context.Context) (User, error) {
@@ -47,6 +46,7 @@ func GetUser(ctx context.Context) (User, error) {
 	}
 	u.ID = q.Get("user")
 	u.Role = q.Get("role")
+	u.TenantID = q.Get("tenant")
 	token, ok := headers[_AuthorizationHeader]
 	if ok {
 		u.Token = strings.Join(token, "")

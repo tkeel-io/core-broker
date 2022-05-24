@@ -23,6 +23,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/tkeel-io/core-broker/pkg/metrics"
+	"github.com/tkeel-io/core-broker/pkg/model"
 	"github.com/tkeel-io/core-broker/pkg/server"
 	"github.com/tkeel-io/core-broker/pkg/service"
 	"github.com/tkeel-io/kit/app"
@@ -32,6 +34,7 @@ import (
 	// User import.
 
 	Dapr_v1 "github.com/tkeel-io/core-broker/api/dapr"
+	metrics_v1 "github.com/tkeel-io/core-broker/api/metrics/v1"
 	Subscribe_v1 "github.com/tkeel-io/core-broker/api/subscribe/v1"
 	Topic_v1 "github.com/tkeel-io/core-broker/api/topic/v1"
 	Entity_v1 "github.com/tkeel-io/core-broker/api/ws/v1"
@@ -90,11 +93,20 @@ func main() {
 		SubscribeSrv := service.NewSubscribeService()
 		Subscribe_v1.RegisterSubscribeHTTPServer(httpSrv.Container, SubscribeSrv)
 		Subscribe_v1.RegisterSubscribeServer(grpcSrv.GetServe(), SubscribeSrv)
+
+		metricsSrv := service.NewMetricsService(metrics.CollectorSubscribeNum, metrics.CollectorSubscribeEntitiesNum)
+		metrics_v1.RegisterMetricsHTTPServer(httpSrv.Container, metricsSrv)
 	}
 
 	if err := app.Run(context.TODO()); err != nil {
 		panic(err)
 	}
+
+	sub := model.Subscribe{}
+	sub.InitMetrics()
+
+	subEntities := model.SubscribeEntities{}
+	subEntities.InitMetrics()
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, os.Interrupt)

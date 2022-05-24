@@ -26,9 +26,7 @@ const (
 	_DefaultSubscribeDescription = "平台默认订阅，该订阅无法被删除，无法被修改。"
 )
 
-var (
-	ErrDeviceNotFound = errors.New("device not found")
-)
+var ErrDeviceNotFound = errors.New("device not found")
 
 type SubscribeService struct {
 	pb.UnimplementedSubscribeServer
@@ -48,7 +46,7 @@ func (s *SubscribeService) SubscribeEntitiesByIDs(ctx context.Context, req *pb.S
 		log.Error("err:", err)
 		return nil, pb.ErrUnauthenticated()
 	}
-	subscribe := model.Subscribe{Model: gorm.Model{ID: uint(req.Id)}, UserID: authUser.ID}
+	subscribe := model.Subscribe{Model: gorm.Model{ID: uint(req.Id)}, UserID: authUser.ID, TenantID: authUser.TenantID}
 	validateSubscribeResult := model.DB().First(&subscribe)
 	if validateSubscribeResult.RowsAffected == 0 {
 		err = errors.Wrap(validateSubscribeResult.Error, "subscribe and user ID mismatch")
@@ -98,7 +96,7 @@ func (s *SubscribeService) SubscribeEntitiesByGroups(ctx context.Context, req *p
 		log.Error("err:", err)
 		return nil, pb.ErrUnauthenticated()
 	}
-	subscribe := model.Subscribe{Model: gorm.Model{ID: uint(req.Id)}, UserID: authUser.ID}
+	subscribe := model.Subscribe{Model: gorm.Model{ID: uint(req.Id)}, UserID: authUser.ID, TenantID: authUser.TenantID}
 	validateSubscribeResult := model.DB().First(&subscribe)
 	if validateSubscribeResult.RowsAffected == 0 {
 		err = errors.Wrap(validateSubscribeResult.Error, "subscribe and user ID mismatch")
@@ -137,7 +135,7 @@ func (s *SubscribeService) SubscribeEntitiesByModels(ctx context.Context, req *p
 		log.Error("err:", err)
 		return nil, pb.ErrUnauthenticated()
 	}
-	subscribe := model.Subscribe{Model: gorm.Model{ID: uint(req.Id)}, UserID: authUser.ID}
+	subscribe := model.Subscribe{Model: gorm.Model{ID: uint(req.Id)}, UserID: authUser.ID, TenantID: authUser.TenantID}
 	validateSubscribeResult := model.DB().First(&subscribe)
 	if validateSubscribeResult.RowsAffected == 0 {
 		err = errors.Wrap(validateSubscribeResult.Error, "subscribe and user ID mismatch")
@@ -270,6 +268,7 @@ func (s *SubscribeService) CreateSubscribe(ctx context.Context, req *pb.CreateSu
 		UserID:      authUser.ID,
 		Title:       req.Title,
 		Description: req.Description,
+		TenantID:    authUser.TenantID,
 	}
 
 	// TODO: lock the table
