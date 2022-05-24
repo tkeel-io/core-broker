@@ -138,7 +138,7 @@ func (e *SubscribeEntities) AfterCreate(tx *gorm.DB) error {
 	tx.Model(&subscribe).Where("id = ?", e.SubscribeID).First(&subscribe)
 	e.Subscribe = subscribe
 	log.Debug("creation of SubscribeEntities:", *e)
-	if err := createCoreSubscription(e.EntityID, e.Subscribe.Endpoint); err != nil {
+	if err := createCoreSubscription(e.EntityID, e.Subscribe.Endpoint, e.Subscribe.UserID); err != nil {
 		err = errors.Wrap(err, "create core subscription err")
 		log.Error(err)
 		return err
@@ -171,7 +171,7 @@ func (e *SubscribeEntities) BeforeUpdate(tx *gorm.DB) error {
 		Reduce); err != nil {
 		return err
 	}
-	if err := deleteCoreSubscription(e.EntityID, e.Subscribe.Endpoint); err != nil {
+	if err := deleteCoreSubscription(e.EntityID, e.Subscribe.Endpoint, e.Subscribe.UserID); err != nil {
 		log.Error(err)
 		return err
 	}
@@ -193,7 +193,7 @@ func (e *SubscribeEntities) AfterUpdate(tx *gorm.DB) error {
 	e.Subscribe = subscribe
 	//	tx.Model(&e.Subscribe).Where("id = ?", e.SubscribeID).First(&e.Subscribe)
 	log.Debug("creation of SubscribeEntities:", *e)
-	if err := createCoreSubscription(e.EntityID, e.Subscribe.Endpoint); err != nil {
+	if err := createCoreSubscription(e.EntityID, e.Subscribe.Endpoint, e.Subscribe.UserID); err != nil {
 		err = errors.Wrap(err, "create core subscription err")
 		log.Error(err)
 		return err
@@ -233,19 +233,19 @@ func (e *SubscribeEntities) BeforeDelete(tx *gorm.DB) error {
 		Reduce); err != nil {
 		return err
 	}
-	if err := deleteCoreSubscription(e.EntityID, e.Subscribe.Endpoint); err != nil {
+	if err := deleteCoreSubscription(e.EntityID, e.Subscribe.Endpoint, e.Subscribe.UserID); err != nil {
 		log.Error(err)
 		return err
 	}
 	return nil
 }
 
-func createCoreSubscription(entityID string, topic string) error {
-	return coreClient.Subscribe(subscriptionIDByMD5AndPrefix(entityID, topic), entityID, topic)
+func createCoreSubscription(entityID string, topic, userID string) error {
+	return coreClient.Subscribe(subscriptionIDByMD5AndPrefix(entityID, topic), entityID, topic, userID)
 }
 
-func deleteCoreSubscription(entityID string, topic string) error {
-	return coreClient.Unsubscribe(subscriptionIDByMD5AndPrefix(entityID, topic))
+func deleteCoreSubscription(entityID string, topic, userID string) error {
+	return coreClient.Unsubscribe(subscriptionIDByMD5AndPrefix(entityID, topic), userID)
 }
 
 type UtilChoice uint8
