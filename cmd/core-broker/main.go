@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/tkeel-io/core-broker/pkg/metrics"
 	"github.com/tkeel-io/core-broker/pkg/model"
@@ -102,12 +103,16 @@ func main() {
 		panic(err)
 	}
 
-	sub := model.Subscribe{}
-	sub.InitMetrics()
+	go func() {
+		ticker := time.NewTicker(time.Minute)
+		sub := model.Subscribe{}
+		subEntities := model.SubscribeEntities{}
+		for range ticker.C {
+			sub.InitMetrics()
+			subEntities.InitMetrics()
 
-	subEntities := model.SubscribeEntities{}
-	subEntities.InitMetrics()
-
+		}
+	}()
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, os.Interrupt)
 	<-stop

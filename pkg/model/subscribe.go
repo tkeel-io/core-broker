@@ -39,12 +39,6 @@ func (s *Subscribe) InitMetrics() {
 	}
 }
 
-func (s *Subscribe) AfterCreate(tx *gorm.DB) error {
-	metrics.CollectorSubscribeNum.WithLabelValues(s.TenantID).Inc()
-	log.Debug("after create")
-	return nil
-}
-
 func (s *Subscribe) UpdateEndpointTitle(oldTitle, newTitle string) error {
 	subEntities := make([]*SubscribeEntities, 0)
 	res := DB().Model(&SubscribeEntities{}).
@@ -90,11 +84,6 @@ func (s *Subscribe) BeforeDelete(tx *gorm.DB) error {
 	if err := destroyRelevant(tx, s); err != nil {
 		return err
 	}
-	return nil
-}
-
-func (s *Subscribe) AfterDelete(tx *gorm.DB) error {
-	metrics.CollectorSubscribeNum.WithLabelValues(s.TenantID).Dec()
 	return nil
 }
 
@@ -164,12 +153,6 @@ func (e *SubscribeEntities) AfterCreate(tx *gorm.DB) error {
 		log.Error(err)
 		return err
 	}
-	metrics.CollectorSubscribeEntitiesNum.WithLabelValues(e.Subscribe.TenantID).Inc()
-	return nil
-}
-
-func (e *SubscribeEntities) AfterDelete(tx *gorm.DB) error {
-	metrics.CollectorSubscribeEntitiesNum.WithLabelValues(e.Subscribe.TenantID).Dec()
 	return nil
 }
 
