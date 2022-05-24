@@ -124,3 +124,31 @@ const createSQLTemplate = "CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8
 func createDBSQL(dbName string) string {
 	return fmt.Sprintf(createSQLTemplate, dbName)
 }
+
+func CountSubscribeGroupByTentant(model interface{}) map[string]int {
+	type res struct {
+		Tenant string
+		Count  int
+	}
+	ress := make([]res, 0)
+	DB().Model(model).Select("tenant_id as tenant, count(*) as count").Group("tenant").Find(&ress)
+	out := make(map[string]int)
+	for _, v := range ress {
+		out[v.Tenant] = v.Count
+	}
+	return out
+}
+
+func CountSubEntitiesGroupByTentant() map[string]int {
+	type res struct {
+		Tenant string
+		Count  int
+	}
+	ress := make([]res, 0)
+	DB().Raw("SELECT tenant_id as tenant , count(1) as count FROM subscribe_entities join subscribes group by tenant_id").Scan(&ress)
+	out := make(map[string]int)
+	for _, v := range ress {
+		out[v.Tenant] = v.Count
+	}
+	return out
+}

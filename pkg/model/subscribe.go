@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/tkeel-io/core-broker/pkg/metrics"
 	"github.com/tkeel-io/core-broker/pkg/util"
 	"github.com/tkeel-io/kit/log"
 	"gorm.io/gorm"
@@ -19,6 +20,7 @@ type Subscribe struct {
 	Title       string `gorm:"not null"`
 	Description string
 	UserID      string `gorm:"index"`
+	TenantID    string `gorm:"index"`
 	Endpoint    string `gorm:"index"`
 	IsDefault   bool   `gorm:"default:false"`
 }
@@ -28,6 +30,13 @@ func (s *Subscribe) BeforeCreate(tx *gorm.DB) error {
 		s.Endpoint = util.GenerateSubscribeEndpoint()
 	}
 	return nil
+}
+
+func (s *Subscribe) InitMetrics() {
+	out := CountSubscribeGroupByTentant(Subscribe{})
+	for k, v := range out {
+		metrics.CollectorSubscribeNum.WithLabelValues(k).Set(float64(v))
+	}
 }
 
 func (s *Subscribe) UpdateEndpointTitle(oldTitle, newTitle string) error {
@@ -46,15 +55,19 @@ func (s *Subscribe) UpdateEndpointTitle(oldTitle, newTitle string) error {
 		DB().Model(&subscribe).Where("id = ?", e.SubscribeID).First(&subscribe)
 		e.Subscribe = subscribe
 		if err := updateEntitySubscribeEndpoint(e.EntityID,
-			strings.Join([]string{oldTitle, strconv.FormatUint(uint64(e.SubscribeID), 10),
-				AMQPAddressString(e.Subscribe.Endpoint)}, "@"),
+			strings.Join([]string{
+				oldTitle, strconv.FormatUint(uint64(e.SubscribeID), 10),
+				AMQPAddressString(e.Subscribe.Endpoint),
+			}, "@"),
 			Reduce); err != nil {
 			log.Error("reduce entity subscribe endpoint err")
 			continue
 		} else {
 			if err := updateEntitySubscribeEndpoint(e.EntityID,
-				strings.Join([]string{newTitle, strconv.FormatUint(uint64(e.SubscribeID), 10),
-					AMQPAddressString(e.Subscribe.Endpoint)}, "@"),
+				strings.Join([]string{
+					newTitle, strconv.FormatUint(uint64(e.SubscribeID), 10),
+					AMQPAddressString(e.Subscribe.Endpoint),
+				}, "@"),
 				Add); err != nil {
 				log.Error("add entity subscribe endpoint err")
 			}
@@ -120,7 +133,7 @@ func (e *SubscribeEntities) AfterCreate(tx *gorm.DB) error {
 	if e.EntityID == "" {
 		return errors.New("entityID is empty")
 	}
-	//tx.Model(&e.Subscribe).Where("id = ?", e.SubscribeID).First(&e.Subscribe)
+	// tx.Model(&e.Subscribe).Where("id = ?", e.SubscribeID).First(&e.Subscribe)
 	subscribe := Subscribe{}
 	tx.Model(&subscribe).Where("id = ?", e.SubscribeID).First(&subscribe)
 	e.Subscribe = subscribe
@@ -131,8 +144,10 @@ func (e *SubscribeEntities) AfterCreate(tx *gorm.DB) error {
 		return err
 	}
 	if err := updateEntitySubscribeEndpoint(e.EntityID,
-		strings.Join([]string{e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
-			AMQPAddressString(e.Subscribe.Endpoint)}, "@"),
+		strings.Join([]string{
+			e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
+			AMQPAddressString(e.Subscribe.Endpoint),
+		}, "@"),
 		Add); err != nil {
 		err = errors.Wrap(err, "update entity subscribe endpoint err")
 		log.Error(err)
@@ -149,8 +164,10 @@ func (e *SubscribeEntities) BeforeUpdate(tx *gorm.DB) error {
 	}
 	log.Debug("deleted of SubscribeEntities:", *e)
 	if err := updateEntitySubscribeEndpoint(e.EntityID,
-		strings.Join([]string{e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
-			AMQPAddressString(e.Subscribe.Endpoint)}, "@"),
+		strings.Join([]string{
+			e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
+			AMQPAddressString(e.Subscribe.Endpoint),
+		}, "@"),
 		Reduce); err != nil {
 		return err
 	}
@@ -182,14 +199,23 @@ func (e *SubscribeEntities) AfterUpdate(tx *gorm.DB) error {
 		return err
 	}
 	if err := updateEntitySubscribeEndpoint(e.EntityID,
-		strings.Join([]string{e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
-			AMQPAddressString(e.Subscribe.Endpoint)}, "@"),
+		strings.Join([]string{
+			e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
+			AMQPAddressString(e.Subscribe.Endpoint),
+		}, "@"),
 		Add); err != nil {
 		err = errors.Wrap(err, "update entity subscribe endpoint err")
 		log.Error(err)
 		return err
 	}
 	return nil
+}
+
+func (s *SubscribeEntities) InitMetrics() {
+	out := CountSubEntitiesGroupByTentant()
+	for k, v := range out {
+		metrics.CollectorSubscribeEntitiesNum.WithLabelValues(k).Set(float64(v))
+	}
 }
 
 func (e *SubscribeEntities) BeforeDelete(tx *gorm.DB) error {
@@ -200,8 +226,10 @@ func (e *SubscribeEntities) BeforeDelete(tx *gorm.DB) error {
 	}
 	log.Debug("deleted of SubscribeEntities:", *e)
 	if err := updateEntitySubscribeEndpoint(e.EntityID,
-		strings.Join([]string{e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
-			AMQPAddressString(e.Subscribe.Endpoint)}, "@"),
+		strings.Join([]string{
+			e.Subscribe.Title, strconv.FormatUint(uint64(e.SubscribeID), 10),
+			AMQPAddressString(e.Subscribe.Endpoint),
+		}, "@"),
 		Reduce); err != nil {
 		return err
 	}
