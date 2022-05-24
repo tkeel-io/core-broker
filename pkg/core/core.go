@@ -33,7 +33,7 @@ type SubscriptionData struct {
 	PubsubName string `json:"pubsub_name,omitempty"`
 }
 
-func (c *Client) Subscribe(subscriptionID, entityID, topic string, fields ...string) error {
+func (c *Client) Subscribe(subscriptionID, entityID, topic string, userID string, fields ...string) error {
 	if subscriptionID == "" ||
 		entityID == "" ||
 		topic == "" {
@@ -53,7 +53,7 @@ func (c *Client) Subscribe(subscriptionID, entityID, topic string, fields ...str
 		PubsubName: types.PubsubName,
 	}
 
-	methodName := CreateSubscriptionURL(subscriptionID, "admin", "dm", "SUBSCRIPTION")
+	methodName := CreateSubscriptionURL(subscriptionID, userID, "dm", "SUBSCRIPTION")
 	log.Debug("subscription ID:", subscriptionID)
 	log.Debug("methodName:", methodName)
 	log.Debug("Subscribe to Core data: ", subscriptionRequestData)
@@ -76,9 +76,9 @@ func (c *Client) Subscribe(subscriptionID, entityID, topic string, fields ...str
 	return nil
 }
 
-func (c *Client) Unsubscribe(subscriptionID string) error {
+func (c *Client) Unsubscribe(subscriptionID, userID string) error {
 	ctx := context.Background()
-	methodName := CreateUnsubscriptionURL(subscriptionID, "admin", "dm", "SUBSCRIPTION")
+	methodName := CreateUnsubscriptionURL(subscriptionID, userID, "dm", "SUBSCRIPTION")
 	log.Debug("invoke unsubscribe to Core: ", methodName)
 	if c, err := c.daprClient.InvokeMethod(ctx, AppID, methodName, http.MethodDelete); err != nil {
 		log.Error("invoke ", methodName, " with ", http.MethodDelete, err)
