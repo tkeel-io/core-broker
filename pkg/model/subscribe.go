@@ -39,6 +39,10 @@ func (s *Subscribe) InitMetrics() {
 	}
 }
 
+func (s *Subscribe) UpdateTenantID(userID, tenantID string) {
+	DB().Model(&Subscribe{}).Where(&Subscribe{UserID: userID}).Update("tenant_id", tenantID)
+}
+
 func (s *Subscribe) UpdateEndpointTitle(oldTitle, newTitle string) error {
 	subEntities := make([]*SubscribeEntities, 0)
 	res := DB().Model(&SubscribeEntities{}).
@@ -241,11 +245,11 @@ func (e *SubscribeEntities) BeforeDelete(tx *gorm.DB) error {
 }
 
 func createCoreSubscription(entityID string, topic, userID string) error {
-	return coreClient.Subscribe(subscriptionIDByMD5AndPrefix(entityID, topic), entityID, topic, userID)
+	return CoreClient().Subscribe(subscriptionIDByMD5AndPrefix(entityID, topic), entityID, topic, userID)
 }
 
 func deleteCoreSubscription(entityID string, topic, userID string) error {
-	return coreClient.Unsubscribe(subscriptionIDByMD5AndPrefix(entityID, topic), userID)
+	return CoreClient().Unsubscribe(subscriptionIDByMD5AndPrefix(entityID, topic), userID)
 }
 
 type UtilChoice uint8
@@ -259,7 +263,7 @@ func updateEntitySubscribeEndpoint(entityID, endpoint string, c UtilChoice) erro
 	separator := ","
 	patchData := make([]map[string]interface{}, 0)
 
-	device, err := coreClient.GetDeviceEntity(entityID)
+	device, err := CoreClient().GetDeviceEntity(entityID)
 	log.Debug("get device entity:", device)
 	if err != nil {
 		log.Error("get entity err:", err)
@@ -300,7 +304,7 @@ func updateEntitySubscribeEndpoint(entityID, endpoint string, c UtilChoice) erro
 	log.Debug("patchData:", patchData)
 	log.Debug("call patch on UtilChoice (Add 1, Reduce 2):", c)
 
-	if err = coreClient.PatchEntity(entityID, patchData); err != nil {
+	if err = CoreClient().PatchEntity(entityID, patchData); err != nil {
 		err = errors.Wrap(err, "patch entity err")
 		return err
 	}

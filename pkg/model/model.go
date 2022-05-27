@@ -30,12 +30,22 @@ var (
 	AMQPServerAddr = "amqp://localhost:3172"
 )
 
-func Setup() error {
-	var err error
-	coreClient, err = core.NewCoreClient()
+func CoreClient() *core.Client {
+	if coreClient != nil {
+		return coreClient
+	}
+
+	client, err := core.NewCoreClient()
 	if err != nil {
 		log.Fatal(err)
+		return nil
 	}
+	coreClient = client
+	return coreClient
+}
+
+func Setup() error {
+	var err error
 
 	amqpServerStr := os.Getenv(amqpServer)
 	if amqpServerStr != "" {
