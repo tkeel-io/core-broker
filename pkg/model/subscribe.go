@@ -235,11 +235,12 @@ func (e *SubscribeEntities) BeforeDelete(tx *gorm.DB) error {
 			AMQPAddressString(e.Subscribe.Endpoint),
 		}, "@"),
 		Reduce); err != nil {
-		return err
+		log.Error(err)
+		//		return err
 	}
 	if err := deleteCoreSubscription(e.EntityID, e.Subscribe.Endpoint, e.Subscribe.UserID); err != nil {
 		log.Error(err)
-		return err
+		//		return err
 	}
 	return nil
 }
