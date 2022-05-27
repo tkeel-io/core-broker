@@ -435,6 +435,8 @@ func (s *SubscribeService) ListSubscribe(ctx context.Context, req *pb.ListSubscr
 		return nil, pb.ErrInternalError()
 	}
 
+	sub := &model.Subscribe{}
+	sub.UpdateTenantID(authUser.ID, authUser.TenantID)
 	data := make([]*pb.SubscribeObject, 0, len(subscribes))
 	for i := range subscribes {
 		data = append(data, &pb.SubscribeObject{
