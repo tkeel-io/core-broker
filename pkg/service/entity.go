@@ -32,18 +32,27 @@ import (
 
 type EntityService struct {
 	msgChanMap map[string]map[string]chan []byte // entityID  clientID msgChan
-	coreClient core.Client
+	coreClient *core.Client
 	locker     sync.RWMutex
 }
 
 func NewEntityService() *EntityService {
 	msgChanMap := make(map[string]map[string]chan []byte)
+	return &EntityService{msgChanMap: msgChanMap}
+}
+
+func (s *EntityService) CoreClient() *core.Client {
+	if s.coreClient != nil {
+		return s.coreClient
+	}
+
 	client, err := core.NewCoreClient()
 	if err != nil {
 		log.Fatal(err)
 		return nil
 	}
-	return &EntityService{msgChanMap: msgChanMap, coreClient: *client}
+	s.coreClient = client
+	return s.coreClient
 }
 
 func (s *EntityService) Run() {
@@ -86,7 +95,7 @@ func (s *EntityService) handleRequest(c *websocket.Conn, stopChan chan struct{},
 				delete(s.msgChanMap[entityID], clientID)
 				if len(s.msgChanMap[entityID]) == 0 {
 					subID := types.SubscriptionIDByJoin(entityID, types.Topic)
-					if err := s.coreClient.Unsubscribe(subID, "admin"); err != nil {
+					if err := s.CoreClient().Unsubscribe(subID, "admin"); err != nil {
 						log.Error("call unsubscribe entity error:", err)
 					}
 					delete(s.msgChanMap, entityID)
@@ -118,7 +127,7 @@ func (s *EntityService) handleRequest(c *websocket.Conn, stopChan chan struct{},
 			s.locker.Unlock()
 
 			subID := types.SubscriptionIDByJoin(entityID, types.Topic)
-			if err := s.coreClient.Subscribe(subID, entityID, types.Topic, "admin"); err != nil {
+			if err := s.CoreClient().Subscribe(subID, entityID, types.Topic, "admin"); err != nil {
 				log.Error("call subscribing to core err:", err)
 			}
 		}
