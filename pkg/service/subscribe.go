@@ -534,7 +534,7 @@ func (s *SubscribeService) ChangeSubscribed(ctx context.Context, req *pb.ChangeS
 		}
 		if err := model.DB().Debug().Where(targetSubscribeEntity).First(&targetSubscribeEntity).Error; !errors.Is(err, gorm.ErrRecordNotFound) {
 			errs = append(errs, errors.New("target subscribe entity already exists"))
-			_ = model.DB().Delete(&subscribeEntity)
+			_ = model.DB().Where("unique_key = ?", subscribeEntity.UniqueKey).Delete(&subscribeEntity)
 			continue
 		}
 		if err = model.DB().Debug().Model(&subscribeEntity).Where(subscribeEntity).Updates(targetSubscribeEntity).Error; err != nil {
