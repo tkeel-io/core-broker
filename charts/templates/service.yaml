@@ -4,6 +4,7 @@ metadata:
   name: {{ include "core-broker.name" . }}
   labels:
     app: {{ include "core-broker.name" . }}
+    tkeel.io/prometheus: "true"
 spec:
   ports:
     - port: {{ .Values.appPort }}

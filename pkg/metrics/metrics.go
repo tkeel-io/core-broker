@@ -4,7 +4,7 @@ import "github.com/prometheus/client_golang/prometheus"
 
 const (
 	// metrics label.
-	MetricsLabelTenant = "tenant_id"
+	MetricsLabelTenant = "tenant"
 
 	// metrics subscribe name.
 	MetricsNameSubNum = "subscribe_num"
