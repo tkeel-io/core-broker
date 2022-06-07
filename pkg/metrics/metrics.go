@@ -11,6 +11,28 @@ const (
 
 	// metrics subscribe entity name.
 	MetricsNameSubEntitiesNum = "subscribe_entities_num"
+
+	// metrics subscribe name.
+	MetricsNameSubMax = "subscribe_max"
+
+	// metrics subscribe entity name.
+	MetricsNameSubEntitiesMax = "subscribe_entities_max"
+)
+
+var CollectorSubscribeMax = prometheus.NewGaugeVec(
+	prometheus.GaugeOpts{
+		Name: MetricsNameSubMax,
+		Help: "subscribe max.",
+	},
+	[]string{MetricsLabelTenant},
+)
+
+var CollectorSubscribeEntitiesMax = prometheus.NewGaugeVec(
+	prometheus.GaugeOpts{
+		Name: MetricsNameSubEntitiesMax,
+		Help: "subscribe entities max.",
+	},
+	[]string{MetricsLabelTenant},
 )
 
 var CollectorSubscribeNum = prometheus.NewGaugeVec(
@@ -28,3 +50,4 @@ var CollectorSubscribeEntitiesNum = prometheus.NewGaugeVec(
 	},
 	[]string{MetricsLabelTenant},
 )
+var Metrics = []prometheus.Collector{CollectorSubscribeEntitiesMax, CollectorSubscribeEntitiesNum, CollectorSubscribeMax, CollectorSubscribeNum}

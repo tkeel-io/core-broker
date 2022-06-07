@@ -95,7 +95,7 @@ func main() {
 		Subscribe_v1.RegisterSubscribeHTTPServer(httpSrv.Container, SubscribeSrv)
 		Subscribe_v1.RegisterSubscribeServer(grpcSrv.GetServe(), SubscribeSrv)
 
-		metricsSrv := service.NewMetricsService(metrics.CollectorSubscribeNum, metrics.CollectorSubscribeEntitiesNum)
+		metricsSrv := service.NewMetricsService(metrics.Metrics...)
 		metrics_v1.RegisterMetricsHTTPServer(httpSrv.Container, metricsSrv)
 	}
 
