@@ -36,6 +36,7 @@ func (s *Subscribe) InitMetrics() {
 	out := CountSubscribeGroupByTentant(Subscribe{})
 	for k, v := range out {
 		metrics.CollectorSubscribeNum.WithLabelValues(k).Set(float64(v))
+		metrics.CollectorSubscribeMax.WithLabelValues(k).Set(5)
 	}
 }
 
@@ -219,6 +220,7 @@ func (s *SubscribeEntities) InitMetrics() {
 	out := CountSubEntitiesGroupByTentant()
 	for k, v := range out {
 		metrics.CollectorSubscribeEntitiesNum.WithLabelValues(k).Set(float64(v))
+		metrics.CollectorSubscribeEntitiesMax.WithLabelValues(k).Set(200)
 	}
 }
 
