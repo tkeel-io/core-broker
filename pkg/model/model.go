@@ -155,7 +155,7 @@ func CountSubEntitiesGroupByTentant() map[string]int {
 		Count  int
 	}
 	ress := make([]res, 0)
-	DB().Raw("SELECT tenant_id as tenant , count(1) as count FROM subscribe_entities join subscribes group by tenant_id").Scan(&ress)
+	DB().Raw("SELECT tenant_id as tenant , count(*) as count FROM subscribe_entities join subscribes on subscribe_entities.subscribe_id = subscribes.id  group by tenant_id").Scan(&ress)
 	out := make(map[string]int)
 	for _, v := range ress {
 		out[v.Tenant] = v.Count
