@@ -12,11 +12,11 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/stretchr/testify v1.7.0
-	github.com/tkeel-io/kit v0.0.0-20220311032953-c8bf1e0f86cb
-	github.com/tkeel-io/tkeel-interface/openapi v0.0.0-20220311032517-6775df80b836
-	google.golang.org/genproto v0.0.0-20220310185008-1973136f34c6
-	google.golang.org/grpc v1.44.0
-	google.golang.org/protobuf v1.27.1
+	github.com/tkeel-io/kit v0.0.0-20220522082406-248e4772e711
+	github.com/tkeel-io/tkeel-interface/openapi v0.0.0-20220621094312-cbc2cda77d02
+	google.golang.org/genproto v0.0.0-20220621134657-43db42f103f7
+	google.golang.org/grpc v1.47.0
+	google.golang.org/protobuf v1.28.0
 	gorm.io/driver/mysql v1.2.3
 	gorm.io/gorm v1.22.5
 )
