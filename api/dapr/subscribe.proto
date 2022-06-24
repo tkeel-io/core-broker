@@ -11,31 +11,35 @@ option java_multiple_files = true;
 option java_package = "api.dapr";
 
 service Subscribe {
-	rpc GetSubscribe (google.protobuf.Empty) returns (ListTopicSubscriptionsResponse) {
-		option (google.api.http) = {
-			get : "/subscribe"
-		};
-	};
+  rpc GetSubscribe(google.protobuf.Empty)
+      returns (ListTopicSubscriptionsResponse) {
+    option (google.api.http) = {
+      get: "/subscribe"
+    };
+  };
 }
 
-// ListTopicSubscriptionsResponse is the message including the list of the subscribing topics.
+// ListTopicSubscriptionsResponse is the message including the list of the
+// subscribing topics.
 message ListTopicSubscriptionsResponse {
-    // The list of topics.
-    repeated TopicSubscription subscriptions = 1;
-  }
-  
-  // TopicSubscription represents topic and metadata.
-  message TopicSubscription {
-    // Required. The name of the pubsub containing the topic below to subscribe to.
-    string pubsubname = 1;
-  
-    // Required. The name of topic which will be subscribed
-    string topic = 2;
-  
-    // The optional properties used for this topic's subscription e.g. session id
-    map<string,string> metadata = 3;
-  
-    // The optional routing rules to match against. In the gRPC interface, OnTopicEvent
-    // is still invoked but the matching path is sent in the TopicEventRequest.
-    string route = 5;
-  }
+  // The list of topics.
+  repeated TopicSubscription subscriptions = 1;
+}
+
+// TopicSubscription represents topic and metadata.
+message TopicSubscription {
+  // Required. The name of the pubsub containing the topic below to subscribe
+  // to.
+  string pubsubname = 1;
+
+  // Required. The name of topic which will be subscribed
+  string topic = 2;
+
+  // The optional properties used for this topic's subscription e.g. session id
+  map<string, string> metadata = 3;
+
+  // The optional routing rules to match against. In the gRPC interface,
+  // OnTopicEvent is still invoked but the matching path is sent in the
+  // TopicEventRequest.
+  string route = 5;
+}

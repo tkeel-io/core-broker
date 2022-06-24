@@ -10,11 +10,11 @@ option java_multiple_files = true;
 option java_package = "api.ws.v1";
 
 service Entity {
-	rpc GetEntity (GetEntityRequest) returns (GetEntityResponse) {
-		option (google.api.http) = {
-			get : "/ws"
-		};
-	};
+  rpc GetEntity(GetEntityRequest) returns (GetEntityResponse) {
+    option (google.api.http) = {
+      get: "/ws"
+    };
+  };
 }
 
 message GetEntityRequest {}

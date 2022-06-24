@@ -21,15 +21,15 @@ service Openapi {
   // {"response":{"raw_data":true}}
   rpc Identify(google.protobuf.Empty) returns (IdentifyResponse) {
     option (google.api.http) = {
-      get : "/identify"
+      get: "/identify"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary : "openapi identify"
-      operation_id : "Identify"
-      tags : "Openapi"
-      responses : {
-        key : "200"
-        value : {description : "OK"}
+      summary: "openapi identify"
+      operation_id: "Identify"
+      tags: "Openapi"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
       }
     };
   }
@@ -44,16 +44,16 @@ service Openapi {
   // }
   rpc AddonsIdentify(AddonsIdentifyRequest) returns (AddonsIdentifyResponse) {
     option (google.api.http) = {
-      post : "/addons/identify"
-      body : "*"
+      post: "/addons/identify"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary : "openapi addons identify"
-      operation_id : "Identify"
-      tags : "Openapi"
-      responses : {
-        key : "200"
-        value : {description : "OK"}
+      summary: "openapi addons identify"
+      operation_id: "Identify"
+      tags: "Openapi"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
       }
     };
   }
@@ -63,16 +63,16 @@ service Openapi {
   // {"response":{"raw_data":true}}
   rpc TenantEnable(TenantEnableRequest) returns (TenantEnableResponse) {
     option (google.api.http) = {
-      post : "/tenant/enable"
-      body : "*"
+      post: "/tenant/enable"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary : "openapi tenant enable"
-      operation_id : "TenantEnable"
-      tags : "Openapi"
-      responses : {
-        key : "200"
-        value : {description : "OK"}
+      summary: "openapi tenant enable"
+      operation_id: "TenantEnable"
+      tags: "Openapi"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
       }
     };
   }
@@ -81,16 +81,16 @@ service Openapi {
   // {"response":{"raw_data":true}}
   rpc TenantDisable(TenantDisableRequest) returns (TenantDisableResponse) {
     option (google.api.http) = {
-      post : "/tenant/disable"
-      body : "*"
+      post: "/tenant/disable"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary : "openapi tenant disable"
-      operation_id : "TenantDisable"
-      tags : "Openapi"
-      responses : {
-        key : "200"
-        value : {description : "OK"}
+      summary: "openapi tenant disable"
+      operation_id: "TenantDisable"
+      tags: "Openapi"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
       }
     };
   }
@@ -99,15 +99,15 @@ service Openapi {
   // {"response":{"raw_data":true}}
   rpc Status(google.protobuf.Empty) returns (StatusResponse) {
     option (google.api.http) = {
-      get : "/status"
+      get: "/status"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary : "openapi status"
-      operation_id : "Status"
-      tags : "Openapi"
-      responses : {
-        key : "200"
-        value : {description : "OK"}
+      summary: "openapi status"
+      operation_id: "Status"
+      tags: "Openapi"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
       }
     };
   }
