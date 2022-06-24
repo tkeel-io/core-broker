@@ -11,523 +11,646 @@ option java_multiple_files = true;
 option java_package = "api.subscribe.v1";
 
 service Subscribe {
-  rpc SubscribeEntitiesByIDs (SubscribeEntitiesByIDsRequest) returns (SubscribeEntitiesByIDsResponse) {
+  rpc SubscribeEntitiesByIDs(SubscribeEntitiesByIDsRequest)
+      returns (SubscribeEntitiesByIDsResponse) {
     option (google.api.http) = {
-      post : "/subscribe/{id}/entities"
-      body : "*"
-    };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "通过实体id列表添加到订阅";
-      operation_id: "subscribeEntitiesByIDs";
-      tags: "subscribe";
-      responses: {
-        key: "200"
-        value: {
-          description: "OK";
-        }
-      }
-    };
-  };
-  rpc SubscribeEntitiesByGroups (SubscribeEntitiesByGroupsRequest) returns (SubscribeEntitiesByGroupsResponse) {
-    option (google.api.http) = {
-      post : "/subscribe/{id}/groups"
+      post: "/subscribe/{id}/entities"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "通过实体组添加到订阅";
-      operation_id: "subscribeEntitiesByGroups";
-      tags: "subscribe";
+      summary: "通过实体id列表添加到订阅"
+      operation_id: "subscribeEntitiesByIDs"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc SubscribeEntitiesByModels (SubscribeEntitiesByModelsRequest) returns (SubscribeEntitiesByModelsResponse) {
+  rpc SubscribeEntitiesByGroups(SubscribeEntitiesByGroupsRequest)
+      returns (SubscribeEntitiesByGroupsResponse) {
     option (google.api.http) = {
-      post : "/subscribe/{id}/models"
+      post: "/subscribe/{id}/groups"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "通过模板添加到订阅";
-      operation_id: "subscribeEntitiesByModels";
-      tags: "subscribe";
+      summary: "通过实体组添加到订阅"
+      operation_id: "subscribeEntitiesByGroups"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc UnsubscribeEntitiesByIDs (UnsubscribeEntitiesByIDsRequest) returns (UnsubscribeEntitiesByIDsResponse) {
+  rpc SubscribeEntitiesByModels(SubscribeEntitiesByModelsRequest)
+      returns (SubscribeEntitiesByModelsResponse) {
     option (google.api.http) = {
-      post : "/subscribe/{id}/entities/delete"
+      post: "/subscribe/{id}/models"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "取消订阅";
-      operation_id: "unsubscribeEntitiesByIDs";
-      tags: "subscribe";
+      summary: "通过模板添加到订阅"
+      operation_id: "subscribeEntitiesByModels"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc ListSubscribeEntities(ListSubscribeEntitiesRequest) returns (ListSubscribeEntitiesResponse) {
+  rpc UnsubscribeEntitiesByIDs(UnsubscribeEntitiesByIDsRequest)
+      returns (UnsubscribeEntitiesByIDsResponse) {
     option (google.api.http) = {
-      post : "/subscribe/{id}/entities/list"
+      post: "/subscribe/{id}/entities/delete"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "查询订阅的实体列表";
-      operation_id: "listSubscribeEntities";
-      tags: "subscribe";
+      summary: "取消订阅"
+      operation_id: "unsubscribeEntitiesByIDs"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
+      }
+    };
+  };
+  rpc ListSubscribeEntities(ListSubscribeEntitiesRequest)
+      returns (ListSubscribeEntitiesResponse) {
+    option (google.api.http) = {
+      post: "/subscribe/{id}/entities/list"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "查询订阅的实体列表"
+      operation_id: "listSubscribeEntities"
+      tags: "subscribe"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
       }
     };
   }
-  rpc CreateSubscribe (CreateSubscribeRequest) returns (CreateSubscribeResponse) {
+  rpc CreateSubscribe(CreateSubscribeRequest)
+      returns (CreateSubscribeResponse) {
     option (google.api.http) = {
-      post : "/subscribe"
-      body : "*"
+      post: "/subscribe"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "创建订阅";
-      operation_id: "createSubscribe";
-      tags: "subscribe";
+      summary: "创建订阅"
+      operation_id: "createSubscribe"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc UpdateSubscribe (UpdateSubscribeRequest) returns (UpdateSubscribeResponse) {
+  rpc UpdateSubscribe(UpdateSubscribeRequest)
+      returns (UpdateSubscribeResponse) {
     option (google.api.http) = {
-      patch : "/subscribe/{id}"
-      body : "*"
+      patch: "/subscribe/{id}"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "更新订阅";
-      operation_id: "updateSubscribe";
-      tags: "subscribe";
+      summary: "更新订阅"
+      operation_id: "updateSubscribe"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc DeleteSubscribe (DeleteSubscribeRequest) returns (DeleteSubscribeResponse) {
+  rpc DeleteSubscribe(DeleteSubscribeRequest)
+      returns (DeleteSubscribeResponse) {
     option (google.api.http) = {
-      delete : "/subscribe/{id}"
+      delete: "/subscribe/{id}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "删除订阅";
-      operation_id: "deleteSubscribe";
-      tags: "subscribe";
+      summary: "删除订阅"
+      operation_id: "deleteSubscribe"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc GetSubscribe (GetSubscribeRequest) returns (GetSubscribeResponse) {
+  rpc GetSubscribe(GetSubscribeRequest) returns (GetSubscribeResponse) {
     option (google.api.http) = {
-      get : "/subscribe/{id}"
+      get: "/subscribe/{id}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "查询订阅";
-      operation_id: "getSubscribe";
-      tags: "subscribe";
+      summary: "查询订阅"
+      operation_id: "getSubscribe"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc ListSubscribe (ListSubscribeRequest) returns (ListSubscribeResponse) {
+  rpc ListSubscribe(ListSubscribeRequest) returns (ListSubscribeResponse) {
     option (google.api.http) = {
-      post : "/subscribe/list"
-      body : "*"
+      post: "/subscribe/list"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "查询订阅列表";
-      operation_id: "listSubscribe";
-      tags: "subscribe";
+      summary: "查询订阅列表"
+      operation_id: "listSubscribe"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc ChangeSubscribed (ChangeSubscribedRequest) returns (ChangeSubscribedResponse) {
+  rpc ChangeSubscribed(ChangeSubscribedRequest)
+      returns (ChangeSubscribedResponse) {
     option (google.api.http) = {
-      put : "/subscribe/{id}"
-      body : "*"
+      put: "/subscribe/{id}"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "移动订阅";
-      operation_id: "changeSubscribe";
-      tags: "subscribe";
+      summary: "移动订阅"
+      operation_id: "changeSubscribe"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc ValidateSubscribed (ValidateSubscribedRequest) returns (ValidateSubscribedResponse) {
+  rpc ValidateSubscribed(ValidateSubscribedRequest)
+      returns (ValidateSubscribedResponse) {
     option (google.api.http) = {
-      post : "/validate/subscribe"
-      body : "*"
+      post: "/validate/subscribe"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "校验订阅信息";
-      operation_id: "ValidateSubscribed";
-      tags: "subscribe";
+      summary: "校验订阅信息"
+      operation_id: "ValidateSubscribed"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
-  rpc SubscribeByDevice (SubscribeByDeviceRequest) returns (SubscribeByDeviceResponse) {
+  rpc SubscribeByDevice(SubscribeByDeviceRequest)
+      returns (SubscribeByDeviceResponse) {
     option (google.api.http) = {
-      post : "/subscribe/device/{id}"
-      body : "*"
+      post: "/subscribe/device/{id}"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "添加设备订阅";
-      operation_id: "SubscribeByDevice";
-      tags: "subscribe";
+      summary: "添加设备订阅"
+      operation_id: "SubscribeByDevice"
+      tags: "subscribe"
       responses: {
         key: "200"
-        value: {
-          description: "OK";
-        }
+        value: { description: "OK" }
       }
     };
   };
 }
 
 message SubscribeEntitiesByIDsRequest {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   repeated string entities = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "实体id列表"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "实体id列表"
+      }];
 }
 
 message SubscribeEntitiesByIDsResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string status = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅状态"
+      }];
 }
 
 message SubscribeEntitiesByGroupsRequest {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   repeated string groups = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "实体组列表"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "实体组列表"
+      }];
 }
 
 message SubscribeEntitiesByGroupsResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string status = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅状态"
+      }];
 }
 
 message SubscribeEntitiesByModelsRequest {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   repeated string models = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "模型列表"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "模型列表"
+      }];
 }
 
 message SubscribeEntitiesByModelsResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string status = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅状态"
+      }];
 }
 
 message UnsubscribeEntitiesByIDsRequest {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   repeated string entities = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "取消订阅的设备ID们"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "取消订阅的设备ID们"
+      }];
 }
 
 message UnsubscribeEntitiesByIDsResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string status = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅状态"
+      }];
 }
 
 message ListSubscribeEntitiesRequest {
-  uint64 page_num = 1
-   [(google.api.field_behavior) = REQUIRED,
+  uint64 page_num = 1 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "页数",
-    }];
-  uint64 page_size = 2
-    [(google.api.field_behavior) = REQUIRED,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    }
+  ];
+  uint64 page_size = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "每页数量",
-    }];
-  string order_by = 3
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "排序",
-    }];
-  bool is_descending = 4
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "倒序",
-      }];
-  string key_words = 5
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "关键字",
-      }];
-  string search_key = 6
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "关键字值"
-     }];
-  uint64 id = 7
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+    }
+  ];
+  string order_by = 3 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "排序",
+    }
+  ];
+  bool is_descending = 4 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "倒序",
+    }
+  ];
+  string key_words = 5 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "关键字",
+    }
+  ];
+  string search_key = 6 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "关键字值"
+    }
+  ];
+  uint64 id = 7 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
 }
 
 message ListSubscribeEntitiesResponse {
-  uint64 total = 1
-  [(google.api.field_behavior) = REQUIRED,
+  uint64 total = 1 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "总数",
-    }];
-  uint64 page_num = 2
-  [(google.api.field_behavior) = REQUIRED,
+    }
+  ];
+  uint64 page_num = 2 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "页数",
-    }];
-  uint64 last_page = 3
-  [(google.api.field_behavior) = REQUIRED,
+    }
+  ];
+  uint64 last_page = 3 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "上一页",
-    }];
-  uint64 page_size = 4
-  [(google.api.field_behavior) = REQUIRED,
+    }
+  ];
+  uint64 page_size = 4 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "每页数量",
-    }];
+    }
+  ];
   repeated Entity data = 5
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅实体"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅实体"
+      }];
 }
 
 message SubscribeObject {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string title = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅名称"
+      }];
   string description = 3
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅描述"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅描述"
+      }];
   string endpoint = 4
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅endpoint"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅endpoint"
+      }];
   bool is_default = 5
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "是否为默认订阅"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "是否为默认订阅"
+      }];
 }
 
 message CreateSubscribeRequest {
   string title = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅名称"
+      }];
   string description = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅描述"}];
-
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅描述"
+      }];
 }
 message CreateSubscribeResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string title = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅名称"
+      }];
   string description = 3
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅描述"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅描述"
+      }];
   string endpoint = 4
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅endpoint"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅endpoint"
+      }];
   bool is_default = 5
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "是否为默认订阅"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "是否为默认订阅"
+      }];
 }
 
 message UpdateSubscribeRequest {
   string title = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅名称"
+      }];
   string description = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅描述"}];
-  uint64 id = 3
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅描述"
+      }];
+  uint64 id = 3 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
 }
 message UpdateSubscribeResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string title = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅名称"
+      }];
   string description = 3
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅描述"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅描述"
+      }];
   string endpoint = 4
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅endpoint"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅endpoint"
+      }];
   bool is_default = 5
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "是否为默认订阅"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "是否为默认订阅"
+      }];
 }
 
-message DeleteSubscribeRequest {uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];}
-message DeleteSubscribeResponse {uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];}
+message DeleteSubscribeRequest {
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
+}
+message DeleteSubscribeResponse {
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
+}
 
-message GetSubscribeRequest {uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];}
+message GetSubscribeRequest {
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
+}
 message GetSubscribeResponse {
-  uint64 id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "订阅ID"
+  }];
   string title = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅名称"
+      }];
   string description = 3
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅描述"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅描述"
+      }];
   string endpoint = 4
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅endpoint"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅endpoint"
+      }];
   uint64 count = 5
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅数量"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅数量"
+      }];
   int64 created_at = 6
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅创建时间"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅创建时间"
+      }];
   int64 updated_at = 7
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅更新时间"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅更新时间"
+      }];
   bool is_default = 8
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "是否为默认订阅"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "是否为默认订阅"
+      }];
 }
 
 message ListSubscribeRequest {
-  uint64 page_num = 1
-    [(google.api.field_behavior) = REQUIRED,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "页数",
-      }];
-  uint64 page_size = 2
-    [(google.api.field_behavior) = REQUIRED,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "每页数量",
-      }];
-  string order_by = 3
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "排序",
-      }];
-  bool is_descending = 4
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "倒序",
-      }];
-  string key_words = 5
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "关键字",
-      }];
-  string search_key =6
-    [(google.api.field_behavior) = OPTIONAL,
-      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        description: "关键字值"
-      }];
-}
-message ListSubscribeResponse {
-  uint64 total = 1
-  [(google.api.field_behavior) = REQUIRED,
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "总数",
-    }];
-  uint64 page_num = 2
-  [(google.api.field_behavior) = REQUIRED,
+  uint64 page_num = 1 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "页数",
-    }];
-  uint64 last_page = 3
-  [(google.api.field_behavior) = REQUIRED,
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "上一页",
-    }];
-  uint64 page_size = 4
-  [(google.api.field_behavior) = REQUIRED,
+    }
+  ];
+  uint64 page_size = 2 [
+    (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "每页数量",
-    }];
+    }
+  ];
+  string order_by = 3 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "排序",
+    }
+  ];
+  bool is_descending = 4 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "倒序",
+    }
+  ];
+  string key_words = 5 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "关键字",
+    }
+  ];
+  string search_key = 6 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "关键字值"
+    }
+  ];
+}
+message ListSubscribeResponse {
+  uint64 total = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "总数",
+    }
+  ];
+  uint64 page_num = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "页数",
+    }
+  ];
+  uint64 last_page = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "上一页",
+    }
+  ];
+  uint64 page_size = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "每页数量",
+    }
+  ];
   repeated SubscribeObject data = 5
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅"
+      }];
 }
 
 message ChangeSubscribedRequest {
-  uint64 id = 1
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "当前订阅ID"}];
+  uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "当前订阅ID"
+  }];
   uint64 targetId = 2
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "目标订阅ID"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "目标订阅ID"
+      }];
   repeated string selectedIds = 3
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "被移动的设备ID"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "被移动的设备ID"
+      }];
 }
 message ChangeSubscribedResponse {
   string status = 1
-  [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "请求状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "请求状态"
+      }];
 }
 
 message Entity {
-  string ID = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "实体id"}];
+  string ID = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "实体id"
+  }];
   string name = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "名称"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "名称"
+      }];
   string status = 3
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "状态"
+      }];
   string template = 4
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "模板"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "模板"
+      }];
   string group = 5
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "组"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "组"
+      }];
   int64 updated_at = 6
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "更新时间"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "更新时间"
+      }];
 }
 
 message ValidateSubscribedRequest {
   string topic = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "topic"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "topic"
+      }];
 }
 
 message ValidateSubscribedResponse {
   string status = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "状态"
+      }];
 }
 
 message SubscribeByDeviceRequest {
-  string id = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "设备id"}];
+  string id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "设备id"
+  }];
   repeated string subscribe_ids = 2
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "订阅id列表"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "订阅id列表"
+      }];
 }
 
 message SubscribeByDeviceResponse {
   string status = 1
-    [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "状态"}];
+      [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description: "状态"
+      }];
 }
