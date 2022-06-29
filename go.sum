@@ -243,8 +243,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/tkeel-io/kit v0.0.0-20220522082406-248e4772e711 h1:sjomik8MznWAiB938kJ5l71w6MUwu9D17v0gt2KOUsY=
 github.com/tkeel-io/kit v0.0.0-20220522082406-248e4772e711/go.mod h1:hTI3tXXqyXfc+eE1wjv1D1dEO4TgArDbaaKKl7RTCZI=
-github.com/tkeel-io/tkeel-interface/openapi v0.0.0-20220621094312-cbc2cda77d02 h1:w+kUv5FdoZxHwcqWEAgOaTOpCi9WolLlzxoUn4px0B4=
-github.com/tkeel-io/tkeel-interface/openapi v0.0.0-20220621094312-cbc2cda77d02/go.mod h1:tjJgHPar2pFjydhnOCLspww8tSOvcKch241PeP9OL8E=
+github.com/tkeel-io/tkeel-interface/openapi v0.0.0-20220624023618-32db91cf0860 h1:k8EFmOucfdYpdz6EuD9q+wOOdkGMNzx9rApTPrksiBY=
+github.com/tkeel-io/tkeel-interface/openapi v0.0.0-20220624023618-32db91cf0860/go.mod h1:tjJgHPar2pFjydhnOCLspww8tSOvcKch241PeP9OL8E=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
@@ -505,8 +505,8 @@ google.golang.org/genproto v0.0.0-20200729003335-053ba62fc06f/go.mod h1:FWY/as6D
 google.golang.org/genproto v0.0.0-20200804131852-c06518451d9c/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20200825200019-8632dd797987/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1/go.mod h1:5CzLGKJ67TSI2B9POpiiyGha0AjJvZIUgRMt1dSmuhc=
-google.golang.org/genproto v0.0.0-20220621134657-43db42f103f7 h1:XTvrnF+agrvedRVFXmEdp+SwIvbGo7E6Y16Tr/LqURk=
-google.golang.org/genproto v0.0.0-20220621134657-43db42f103f7/go.mod h1:KEWEmljWE5zPzLBa/oHl6DaEt9LmfH6WtH1OHIvleBA=
+google.golang.org/genproto v0.0.0-20220628213854-d9e0b6570c03 h1:W70HjnmXFJm+8RNjOpIDYW2nKsSi/af0VvIZUtYkwuU=
+google.golang.org/genproto v0.0.0-20220628213854-d9e0b6570c03/go.mod h1:KEWEmljWE5zPzLBa/oHl6DaEt9LmfH6WtH1OHIvleBA=
 google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZiDr8c=
 google.golang.org/grpc v1.20.1/go.mod h1:10oTOabMzJvdu6/UiuZezV6QK5dSlG84ov/aaiqXj38=
 google.golang.org/grpc v1.21.1/go.mod h1:oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=

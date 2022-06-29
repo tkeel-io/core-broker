@@ -46,12 +46,17 @@ func (s *OpenapiService) AddonsIdentify(ctx context.Context, in *openapi_v1.Addo
 
 // Identify implements Identify.OpenapiServer.
 func (s *OpenapiService) Identify(ctx context.Context, in *emptypb.Empty) (*openapi_v1.IdentifyResponse, error) {
+	profiles := map[string]*openapi_v1.ProfileSchema{
+		"subscribe_max":  &openapi_v1.ProfileSchema{Type: "number", Title: "最大订阅数", Default: 5, MultipleOf: 1, Maximum: 10, Minimum: 1},
+		"subscribe_entities_max": &openapi_v1.ProfileSchema{Type: "number", Title: "最大订阅设备数", Default: 1000, MultipleOf: 1, Maximum: 10000, Minimum: 0},
+	}
 	return &openapi_v1.IdentifyResponse{
 		Res:                     util.OKResult(),
 		PluginId:                "core-broker",
 		Version:                 "0.4.1",
 		TkeelVersion:            "v0.4.0",
 		DisableManualActivation: true,
+		Profiles: profiles,
 	}, nil
 }
 
