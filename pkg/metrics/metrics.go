@@ -50,4 +50,4 @@ var CollectorSubscribeEntitiesNum = prometheus.NewGaugeVec(
 	},
 	[]string{MetricsLabelTenant},
 )
-var Metrics = []prometheus.Collector{CollectorSubscribeEntitiesMax, CollectorSubscribeEntitiesNum, CollectorSubscribeMax, CollectorSubscribeNum}
+var Metrics = []prometheus.Collector{CollectorSubscribeEntitiesNum, CollectorSubscribeNum}
