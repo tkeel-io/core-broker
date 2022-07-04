@@ -6,13 +6,14 @@ package v1
 
 import (
 	context "context"
+	http "net/http"
+
 	go_restful "github.com/emicklei/go-restful"
 	errors "github.com/tkeel-io/kit/errors"
 	result "github.com/tkeel-io/kit/result"
 	protojson "google.golang.org/protobuf/encoding/protojson"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	http "net/http"
 )
 
 import transportHTTP "github.com/tkeel-io/kit/transport/http"
@@ -30,6 +31,7 @@ var (
 type SubscribeHTTPServer interface {
 	ChangeSubscribed(context.Context, *ChangeSubscribedRequest) (*ChangeSubscribedResponse, error)
 	CreateSubscribe(context.Context, *CreateSubscribeRequest) (*CreateSubscribeResponse, error)
+	DeleteEntitiesByID(context.Context, *DeleteEntitiesByIDRequest) (*DeleteEntitiesByIDResponse, error)
 	DeleteSubscribe(context.Context, *DeleteSubscribeRequest) (*DeleteSubscribeResponse, error)
 	GetSubscribe(context.Context, *GetSubscribeRequest) (*GetSubscribeResponse, error)
 	ListSubscribe(context.Context, *ListSubscribeRequest) (*ListSubscribeResponse, error)
@@ -123,6 +125,67 @@ func (h *SubscribeHTTPHandler) CreateSubscribe(req *go_restful.Request, resp *go
 	ctx := transportHTTP.ContextWithHeader(req.Request.Context(), req.Request.Header)
 
 	out, err := h.srv.CreateSubscribe(ctx, &in)
+	if err != nil {
+		tErr := errors.FromError(err)
+		httpCode := errors.GRPCToHTTPStatusCode(tErr.GRPCStatus().Code())
+		if httpCode == http.StatusMovedPermanently {
+			resp.Header().Set("Location", tErr.Message)
+		}
+		resp.WriteHeaderAndJson(httpCode,
+			result.Set(tErr.Reason, tErr.Message, out), "application/json")
+		return
+	}
+	anyOut, err := anypb.New(out)
+	if err != nil {
+		resp.WriteHeaderAndJson(http.StatusInternalServerError,
+			result.Set(errors.InternalError.Reason, err.Error(), nil), "application/json")
+		return
+	}
+
+	outB, err := protojson.MarshalOptions{
+		UseProtoNames:   true,
+		EmitUnpopulated: true,
+	}.Marshal(&result.Http{
+		Code: errors.Success.Reason,
+		Msg:  "",
+		Data: anyOut,
+	})
+	if err != nil {
+		resp.WriteHeaderAndJson(http.StatusInternalServerError,
+			result.Set(errors.InternalError.Reason, err.Error(), nil), "application/json")
+		return
+	}
+	resp.AddHeader(go_restful.HEADER_ContentType, "application/json")
+
+	var remain int
+	for {
+		outB = outB[remain:]
+		remain, err = resp.Write(outB)
+		if err != nil {
+			return
+		}
+		if remain == 0 {
+			break
+		}
+	}
+}
+
+func (h *SubscribeHTTPHandler) DeleteEntitiesByID(req *go_restful.Request, resp *go_restful.Response) {
+	in := DeleteEntitiesByIDRequest{}
+	if err := transportHTTP.GetQuery(req, &in); err != nil {
+		resp.WriteHeaderAndJson(http.StatusBadRequest,
+			result.Set(errors.InternalError.Reason, err.Error(), nil), "application/json")
+		return
+	}
+	if err := transportHTTP.GetPathValue(req, &in); err != nil {
+		resp.WriteHeaderAndJson(http.StatusBadRequest,
+			result.Set(errors.InternalError.Reason, err.Error(), nil), "application/json")
+		return
+	}
+
+	ctx := transportHTTP.ContextWithHeader(req.Request.Context(), req.Request.Header)
+
+	out, err := h.srv.DeleteEntitiesByID(ctx, &in)
 	if err != nil {
 		tErr := errors.FromError(err)
 		httpCode := errors.GRPCToHTTPStatusCode(tErr.GRPCStatus().Code())
@@ -853,6 +916,8 @@ func RegisterSubscribeHTTPServer(container *go_restful.Container, srv SubscribeH
 		To(handler.SubscribeEntitiesByModels))
 	ws.Route(ws.POST("/subscribe/{id}/entities/delete").
 		To(handler.UnsubscribeEntitiesByIDs))
+	ws.Route(ws.DELETE("/entities/{id}").
+		To(handler.DeleteEntitiesByID))
 	ws.Route(ws.POST("/subscribe/{id}/entities/list").
 		To(handler.ListSubscribeEntities))
 	ws.Route(ws.POST("/subscribe").

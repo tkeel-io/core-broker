@@ -167,6 +167,30 @@ func (s *SubscribeService) SubscribeEntitiesByModels(ctx context.Context, req *p
 	return resp, nil
 }
 
+func (s *SubscribeService) DeleteEntitiesByID(ctx context.Context, req *pb.DeleteEntitiesByIDRequest) (*pb.DeleteEntitiesByIDResponse, error) {
+	_, err := auth.GetUser(ctx)
+	if nil != err {
+		log.Error("err:", err)
+		return nil, pb.ErrUnauthenticated()
+	}
+
+	resp := &pb.DeleteEntitiesByIDResponse{Id: req.Id}
+	subEntities := make([]*model.SubscribeEntities, 0)
+	res := model.DB().Model(&model.SubscribeEntities{}).
+		Where(&model.SubscribeEntities{EntityID: req.Id}).Find(&subEntities)
+	log.Info(res)
+	if res.Error != nil {
+		return resp, nil
+	}
+	for _, e := range subEntities {
+		s.UnsubscribeEntitiesByIDs(ctx, &pb.UnsubscribeEntitiesByIDsRequest{
+			Id:       uint64(e.SubscribeID),
+			Entities: []string{req.Id},
+		})
+	}
+	return resp, nil
+}
+
 func (s *SubscribeService) UnsubscribeEntitiesByIDs(ctx context.Context, req *pb.UnsubscribeEntitiesByIDsRequest) (*pb.UnsubscribeEntitiesByIDsResponse, error) {
 	authUser, err := auth.GetUser(ctx)
 	if nil != err {

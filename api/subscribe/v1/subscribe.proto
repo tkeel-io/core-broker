@@ -75,6 +75,21 @@ service Subscribe {
       }
     };
   };
+  rpc DeleteEntitiesByID(DeleteEntitiesByIDRequest)
+      returns (DeleteEntitiesByIDResponse) {
+    option (google.api.http) = {
+      delete: "/entities/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "从所有订阅中删除订阅设备"
+      operation_id: "deleteEntitiesByID"
+      tags: "subscribe"
+      responses: {
+        key: "200"
+        value: { description: "OK" }
+      }
+    };
+  };
   rpc ListSubscribeEntities(ListSubscribeEntitiesRequest)
       returns (ListSubscribeEntitiesResponse) {
     option (google.api.http) = {
@@ -295,6 +310,18 @@ message UnsubscribeEntitiesByIDsResponse {
       [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         description: "订阅状态"
       }];
+}
+
+message DeleteEntitiesByIDRequest {
+  string id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "设备ID"
+  }];
+}
+
+message DeleteEntitiesByIDResponse {
+  string id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "设备ID"
+  }];
 }
 
 message ListSubscribeEntitiesRequest {
