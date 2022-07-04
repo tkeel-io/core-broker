@@ -4,6 +4,7 @@ package v1
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,6 +23,7 @@ type SubscribeClient interface {
 	SubscribeEntitiesByGroups(ctx context.Context, in *SubscribeEntitiesByGroupsRequest, opts ...grpc.CallOption) (*SubscribeEntitiesByGroupsResponse, error)
 	SubscribeEntitiesByModels(ctx context.Context, in *SubscribeEntitiesByModelsRequest, opts ...grpc.CallOption) (*SubscribeEntitiesByModelsResponse, error)
 	UnsubscribeEntitiesByIDs(ctx context.Context, in *UnsubscribeEntitiesByIDsRequest, opts ...grpc.CallOption) (*UnsubscribeEntitiesByIDsResponse, error)
+	DeleteEntitiesByID(ctx context.Context, in *DeleteEntitiesByIDRequest, opts ...grpc.CallOption) (*DeleteEntitiesByIDResponse, error)
 	ListSubscribeEntities(ctx context.Context, in *ListSubscribeEntitiesRequest, opts ...grpc.CallOption) (*ListSubscribeEntitiesResponse, error)
 	CreateSubscribe(ctx context.Context, in *CreateSubscribeRequest, opts ...grpc.CallOption) (*CreateSubscribeResponse, error)
 	UpdateSubscribe(ctx context.Context, in *UpdateSubscribeRequest, opts ...grpc.CallOption) (*UpdateSubscribeResponse, error)
@@ -71,6 +73,15 @@ func (c *subscribeClient) SubscribeEntitiesByModels(ctx context.Context, in *Sub
 func (c *subscribeClient) UnsubscribeEntitiesByIDs(ctx context.Context, in *UnsubscribeEntitiesByIDsRequest, opts ...grpc.CallOption) (*UnsubscribeEntitiesByIDsResponse, error) {
 	out := new(UnsubscribeEntitiesByIDsResponse)
 	err := c.cc.Invoke(ctx, "/api.subscribe.v1.Subscribe/UnsubscribeEntitiesByIDs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *subscribeClient) DeleteEntitiesByID(ctx context.Context, in *DeleteEntitiesByIDRequest, opts ...grpc.CallOption) (*DeleteEntitiesByIDResponse, error) {
+	out := new(DeleteEntitiesByIDResponse)
+	err := c.cc.Invoke(ctx, "/api.subscribe.v1.Subscribe/DeleteEntitiesByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -166,6 +177,7 @@ type SubscribeServer interface {
 	SubscribeEntitiesByGroups(context.Context, *SubscribeEntitiesByGroupsRequest) (*SubscribeEntitiesByGroupsResponse, error)
 	SubscribeEntitiesByModels(context.Context, *SubscribeEntitiesByModelsRequest) (*SubscribeEntitiesByModelsResponse, error)
 	UnsubscribeEntitiesByIDs(context.Context, *UnsubscribeEntitiesByIDsRequest) (*UnsubscribeEntitiesByIDsResponse, error)
+	DeleteEntitiesByID(context.Context, *DeleteEntitiesByIDRequest) (*DeleteEntitiesByIDResponse, error)
 	ListSubscribeEntities(context.Context, *ListSubscribeEntitiesRequest) (*ListSubscribeEntitiesResponse, error)
 	CreateSubscribe(context.Context, *CreateSubscribeRequest) (*CreateSubscribeResponse, error)
 	UpdateSubscribe(context.Context, *UpdateSubscribeRequest) (*UpdateSubscribeResponse, error)
@@ -193,6 +205,9 @@ func (UnimplementedSubscribeServer) SubscribeEntitiesByModels(context.Context, *
 }
 func (UnimplementedSubscribeServer) UnsubscribeEntitiesByIDs(context.Context, *UnsubscribeEntitiesByIDsRequest) (*UnsubscribeEntitiesByIDsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnsubscribeEntitiesByIDs not implemented")
+}
+func (UnimplementedSubscribeServer) DeleteEntitiesByID(context.Context, *DeleteEntitiesByIDRequest) (*DeleteEntitiesByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteEntitiesByID not implemented")
 }
 func (UnimplementedSubscribeServer) ListSubscribeEntities(context.Context, *ListSubscribeEntitiesRequest) (*ListSubscribeEntitiesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSubscribeEntities not implemented")
@@ -302,6 +317,24 @@ func _Subscribe_UnsubscribeEntitiesByIDs_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SubscribeServer).UnsubscribeEntitiesByIDs(ctx, req.(*UnsubscribeEntitiesByIDsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Subscribe_DeleteEntitiesByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEntitiesByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SubscribeServer).DeleteEntitiesByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.subscribe.v1.Subscribe/DeleteEntitiesByID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SubscribeServer).DeleteEntitiesByID(ctx, req.(*DeleteEntitiesByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -490,6 +523,10 @@ var Subscribe_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnsubscribeEntitiesByIDs",
 			Handler:    _Subscribe_UnsubscribeEntitiesByIDs_Handler,
+		},
+		{
+			MethodName: "DeleteEntitiesByID",
+			Handler:    _Subscribe_DeleteEntitiesByID_Handler,
 		},
 		{
 			MethodName: "ListSubscribeEntities",

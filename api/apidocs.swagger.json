@@ -16,6 +16,38 @@
     "application/json"
   ],
   "paths": {
+    "/entities/{id}": {
+      "delete": {
+        "summary": "从所有订阅中删除订阅设备",
+        "operationId": "deleteEntitiesByID",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteEntitiesByIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "设备ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "subscribe"
+        ]
+      }
+    },
     "/subscribe": {
       "post": {
         "summary": "创建订阅",
@@ -683,6 +715,15 @@
         "is_default": {
           "type": "boolean",
           "description": "是否为默认订阅"
+        }
+      }
+    },
+    "v1DeleteEntitiesByIDResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "设备ID"
         }
       }
     },
