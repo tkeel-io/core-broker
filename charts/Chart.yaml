@@ -10,7 +10,7 @@ dependencies:
 - name: mysql
   repository: https://charts.bitnami.com/bitnami
   version: 8.8.12
-description: A Helm chart for Kubernetes
+description: 后端租户平台的「数据订阅」插件
 maintainers:
 - email: tkeel@yunify.com
   name: tkeel
