@@ -770,12 +770,13 @@ func (s SubscribeService) getEntitiesByConditions(conditions deviceutil.Conditio
 
 	for _, item := range resp.Data.Items {
 		entity := &pb.Entity{
-			ID:        item.Id,
-			Name:      item.Properties.BasicInfo.Name,
-			Template:  item.Properties.BasicInfo.TemplateName,
-			Group:     item.Properties.BasicInfo.ParentName,
-			Status:    "offline",
-			UpdatedAt: item.Properties.SysField.UpdatedAt,
+			ID:         item.Id,
+			Name:       item.Properties.BasicInfo.Name,
+			Template:   item.Properties.BasicInfo.TemplateName,
+			TemplateId: item.Properties.BasicInfo.TemplateID,
+			Group:      item.Properties.BasicInfo.ParentName,
+			Status:     "offline",
+			UpdatedAt:  item.Properties.SysField.UpdatedAt,
 		}
 		if item.Properties.ConnectionInfo.IsOnline {
 			entity.Status = "online"
