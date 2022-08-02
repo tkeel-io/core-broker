@@ -5,7 +5,7 @@ annotations:
   tkeel.io/tag: manager
   tkeel.io/version: v0.4.0
 apiVersion: v2
-appVersion: 0.4.1
+appVersion: 1.0.0
 dependencies:
 - name: mysql
   repository: https://charts.bitnami.com/bitnami
@@ -16,4 +16,4 @@ maintainers:
   name: tkeel
 name: core-broker
 type: application
-version: 0.4.1
+version: 1.0.0

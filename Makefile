@@ -2,7 +2,7 @@ GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
 API_PROTO_FILES := api/subscribe/v1/subscribe.proto
-DOCKERTAG?=tkeelio/core-broker:0.4.1-alpha.3
+DOCKERTAG?=tkeelio/core-broker:1.0.0
 
 LOCAL_OS := $(shell uname)
 ifeq ($(LOCAL_OS),Linux)
