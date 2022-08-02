@@ -10,7 +10,7 @@ image:
   repository: tkeelio/core-broker
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  # tag: "0.4.1"
+  tag: "1.0.0"
 
 nameOverride: "core-broker"
 fullnameOverride: "core-broker"
